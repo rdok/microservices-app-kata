@@ -5,18 +5,20 @@ const {randomBytes} = require('crypto')
 const app = express()
 app.use(bodyParser.json())
 
-const comments = {};
+const commentsByPostId = {};
 
-app.get('/comments', (req, res) => {
-    res.send(comments)
+app.get('/posts/:id/comments', (req, res) => {
+    res.send(commentsByPostId[req.params.id] || [])
 })
 
-app.post('/comments', (req, res) => {
-    const id = randomBytes(4).toString('hex')
-    const {title} = req.body
-    comments[id] = {id, title}
+app.post('/posts/:id/comments', ({params, body}, res) => {
+    const commentId = randomBytes(4).toString('hex')
+    const comment = {id: commentId, content: body.content};
+    const comments = commentsByPostId[params.id] || [];
+    comments.push(comment)
+    commentsByPostId[params.id] = comments;
 
-    res.status(201).send(comments[id])
+    res.status(201).send(comment)
 })
 
 app.listen(4001, () => {
