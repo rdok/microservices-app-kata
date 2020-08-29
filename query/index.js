@@ -6,11 +6,17 @@ const app = express();
 app.use(bodyParser.json());
 app.use(cors());
 
-const posts = {};
+const commentsByPostId = {};
+
+app.get('/posts', (req, res) => {
+  console.log('Data set: ', JSON.stringify(commentsByPostId));
+  res.send({data: commentsByPostId});
+});
 
 app.get('/posts/:id', (req, res) => {
-  console.log('Data set: ', JSON.stringify(posts));
-  res.send(posts[req.params.id]);
+  const post = commentsByPostId[req.params.id];
+  console.log('Data set: ', JSON.stringify(post));
+  res.send(post);
 });
 
 app.post('/events', (req, res) => {
@@ -18,16 +24,15 @@ app.post('/events', (req, res) => {
   const { type, data } = req.body;
 
   if (type === 'PostCreated') {
-    const { post } = data;
-    console.log('Saving new post: ', JSON.stringify(post));
-    posts[post.id] = { ...post, comments: [] };
+    const { id, title } = data;
+    console.log(`Saving new post with id (${id})`);
+    commentsByPostId[id] = { id, title, comments: [] };
+
   } else if (type === 'CommentCreated') {
-    const { comment } = data;
-    const postId = comment.postId
-    console.log('Adding new comment: ', JSON.stringify(comment));
-    const comments = posts[postId].comments;
-    comments.push(comment)
-    posts[postId].comments = comments
+    const {id, content, postId } = data;
+    console.log(`Adding new comment for post id (${postId}).`);
+    const post = commentsByPostId[postId];
+    post.comments.push({id, content})
   }
 
   res.send({});

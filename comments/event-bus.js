@@ -4,7 +4,7 @@ module.exports = class {
   static endpoint = 'http://localhost:4005/events';
 
   static commentCreated(comment) {
-    this.dispatch('CommentCreated', { comment });
+    this.dispatch('CommentCreated', comment);
   }
 
   static dispatch(type, data) {
