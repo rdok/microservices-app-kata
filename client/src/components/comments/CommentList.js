@@ -1,28 +1,22 @@
 import React, { useEffect, useState } from 'react';
 import axios from "axios";
 
-export default ({postId}) => {
-  const [content, setContent] = useState('')
+export default ({ postId }) => {
+  const [comments, setComments] = useState({});
 
-  const onSubmit = async(event) => {
-    event.preventDefault();
+  const fetchComments = async () => {
     const url = `http://localhost:4001/posts/${postId}/comments`;
-    await axios.post(url, {content});
-    setContent('')
-  }
+    const res = await axios.get(url);
+    setComments(res.data);
+  };
+
+  useEffect(fetchComments, []);
+
+  const renderedComments = Object.values(comments).map(comment => (
+    <li>{comment.content} </li>
+  ));
 
   return <div>
-    <form onSubmit={onSubmit}>
-      <div className="form-group">
-        <label htmlFor="new-comment">New Comment</label>
-        <input
-          id="new-comment"
-          className="form-control"
-          value={content}
-          onChange={e => setContent(e.target.value)}
-        />
-        <button className="btn btn-primary">Submit</button>
-      </div>
-    </form>
-  </div>
+    <ul> {renderedComments} </ul>
+  </div>;
 }
