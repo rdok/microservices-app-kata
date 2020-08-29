@@ -10,4 +10,5 @@ It consists of a client, posts service, and comments service. And uses an in mem
 cd client && yarn start
 cd comments && npm start
 cd posts && npm start
+cd event-bus && npm start
 ```
