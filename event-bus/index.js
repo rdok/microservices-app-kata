@@ -16,6 +16,7 @@ app.post('/events', (req, res) => {
 
   for (const service in LISTENERS) {
     axios.post(LISTENERS[service], event);
+    console.log(`EventBrodcasted: ${event.type}: ${JSON.stringify(event.data)}`)
   }
 
   res.send({ status: 'OK' });
