@@ -27,9 +27,9 @@ app.post('/events', (req, res) => {
     console.log(`👷 Saved new post`, commentsByPostId[id]);
 
   } else if (type === 'CommentCreated') {
-    const {id, content, postId } = data;
+    const {id, content, postId, moderationStatus } = data;
     const post = commentsByPostId[postId];
-    const comment = {id, content}
+    const comment = {id, content, moderationStatus}
     post.comments.push(comment)
     console.log(`👷 Saved new comment for post id (${postId})`, comment);
   }

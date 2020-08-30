@@ -2,11 +2,21 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const axios = require('axios')
 
+const CommentModerator = require('./comment-moderator')
+
 const app = express()
 app.use(bodyParser.json())
 
+const commentModerator = new CommentModerator()
+
 app.post('/events', (req, res) =>{
-  console.log(`⚡ ${req.body.type}`, req.body.data);
+  const type = req.body.type;
+  console.log(`⚡ ${type}`, req.body.data);
+
+  if(type === 'CommentCreated') {
+    const comment = req.body.data
+    commentModerator.handleCreated(comment)
+  }
 })
 
 app.listen(4003, () => {

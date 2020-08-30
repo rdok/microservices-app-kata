@@ -1,8 +1,8 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const EventBus = require('./event-bus');
-const CommentRepository = require("./comment-repository");
+const EventDispatcher = require('./event-dispatcher');
+const CommentRepository = require('./comment-repository');
 
 const app = express();
 app.use(bodyParser.json());
@@ -19,10 +19,12 @@ app.get('/posts/:id/comments', (req, res) => {
   res.send(db[req.params.id]);
 });
 
-app.post('/posts/:id/comments', ({ params, body }, res) => {
-  const postId = params.id;
+app.post('/posts/:id/comments', (req, res) => {
+  const postId = req.params.id;
+  const body = req.body;
   const comment = commentRepository.store({ postId, data: body });
-  EventBus.commentCreated({ postId, ...comment });
+  EventDispatcher.commentCreated({ postId, ...comment });
+  console.log('💽 db', db)
 
   res.status(201).send(comment);
 });
@@ -33,9 +35,12 @@ app.post('/events', (req, res) => {
   console.log(`⚡ ${type}`, data);
 
   if (type === 'PostCreated') {
-    db[data.id] = [];
-    console.log('👷 Initialised comments for new post', data)
+    db[data.id] = {};
+    console.log('👷 Initialised comments for new post db', {[data.id]: []})
   }
+
+  if(type === 'CommentRejected') commentRepository.reject(data);
+  if(type === 'CommentApproved') commentRepository.approve(data);
 
   res.send({});
 });

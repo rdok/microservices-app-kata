@@ -11,7 +11,7 @@ app.post('/events', (req, res) => {
 
   for (const service in LISTENERS) {
     axios.post(LISTENERS[service], event);
-    console.log(`💥 ${event.type} 🌠 ${service}:`, event.data)
+    console.log(`🌠 ${service}.${event.type}:`, event.data)
   }
 
   res.send({ status: 'OK' });
