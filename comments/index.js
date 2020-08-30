@@ -24,7 +24,6 @@ app.post('/posts/:id/comments', (req, res) => {
   const body = req.body;
   const comment = commentRepository.store({ postId, data: body });
   EventDispatcher.commentCreated({ postId, ...comment });
-  console.log('💽 db', db)
 
   res.status(201).send(comment);
 });
@@ -36,7 +35,7 @@ app.post('/events', (req, res) => {
 
   if (type === 'PostCreated') {
     db[data.id] = {};
-    console.log('👷 Initialised comments for new post db', {[data.id]: []})
+    console.log('👷 Initialised comments for new post id', db[data.id])
   }
 
   if(type === 'CommentRejected') commentRepository.reject(data);
