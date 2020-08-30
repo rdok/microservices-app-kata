@@ -16,7 +16,7 @@ app.get('/posts', (req, res) => {
 });
 
 app.post('/posts', (req, res) => {
-  const id = randomBytes(4).toString('hex');
+  const id = randomBytes(16).toString('hex');
   const { title } = req.body;
   const post = { id, title };
   posts[id] = post;

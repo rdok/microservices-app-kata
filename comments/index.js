@@ -1,33 +1,42 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const { randomBytes } = require('crypto');
 const cors = require('cors');
 const EventBus = require('./event-bus');
+const CommentRepository = require("./comment-repository");
 
 const app = express();
 app.use(bodyParser.json());
 app.use(cors());
 
-const commentsByPostId = {};
+const db = {};
+const commentRepository = new CommentRepository(db);
+
+app.get('/posts/comments', (req, res) => {
+  res.send(db);
+});
 
 app.get('/posts/:id/comments', (req, res) => {
-  res.send(commentsByPostId[req.params.id] || []);
+  res.send(db[req.params.id]);
 });
 
 app.post('/posts/:id/comments', ({ params, body }, res) => {
   const postId = params.id;
-  const commentId = randomBytes(4).toString('hex');
-  const comment = { id: commentId, content: body.content };
-  const comments = commentsByPostId[postId] || [];
-  comments.push(comment);
+  const comment = commentRepository.store({ postId, data: body });
   EventBus.commentCreated({ postId, ...comment });
-  commentsByPostId[params.id] = comments;
 
   res.status(201).send(comment);
 });
 
 app.post('/events', (req, res) => {
-  console.log(`EventRetrieved: ${req.body.type}: ${JSON.stringify(req.body.data)}`);
+  const type = req.body.type;
+  const data = req.body.data;
+  console.log(`EventRetrieved: ${type}: ${JSON.stringify(data)}`);
+
+  if (type === 'PostCreated') {
+    db[data.id] = [];
+    console.log('Initialized comments for new post.')
+  }
+
   res.send({});
 });
 

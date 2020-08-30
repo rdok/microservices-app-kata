@@ -1,15 +1,10 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const axios = require('axios');
+const LISTENERS = require("./listeners");
 
 const app = express();
 app.use(bodyParser.json());
-
-const LISTENERS = {
-  posts: 'http://localhost:4000/events',
-  comments: 'http://localhost:4001/events',
-  query: 'http://localhost:4002/events',
-};
 
 app.post('/events', (req, res) => {
   const event = req.body;
