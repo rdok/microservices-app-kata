@@ -17,6 +17,8 @@ app.post('/events', (req, res) =>{
     const comment = req.body.data
     commentModerator.handleCreated(comment)
   }
+
+  res.send({});
 })
 
 app.listen(4003, () => {

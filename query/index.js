@@ -9,7 +9,7 @@ app.use(cors());
 const commentsByPostId = {};
 
 app.get('/posts', (req, res) => {
-  res.send({data: commentsByPostId});
+  res.send({ data: commentsByPostId });
 });
 
 app.get('/posts/:id', (req, res) => {
@@ -23,14 +23,24 @@ app.post('/events', (req, res) => {
 
   if (type === 'PostCreated') {
     const { id, title } = data;
-    commentsByPostId[id] = { id, title, comments: [] };
+    commentsByPostId[id] = { id, title, comments: {} };
     console.log(`👷 Saved new post`, commentsByPostId[id]);
+  }
 
-  } else if (type === 'CommentCreated') {
-    const {id, content, postId, moderationStatus } = data;
+  if (type === 'CommentCreated') {
+    const { id, content, postId, moderationStatus } = data;
     const post = commentsByPostId[postId];
-    const comment = {id, content, moderationStatus}
-    post.comments.push(comment)
+    const comment = { id, content, moderationStatus };
+    post.comments[id] = comment;
+    console.log(`👷 Saved new comment for post id (${postId})`, comment);
+  }
+
+  if (type === 'CommentUpdated') {
+    const { id, content, postId, moderationStatus } = data;
+    const post = commentsByPostId[postId];
+    const comment = post.comments[id];
+    comment.content = content;
+    comment.moderationStatus = moderationStatus;
     console.log(`👷 Saved new comment for post id (${postId})`, comment);
   }
 
