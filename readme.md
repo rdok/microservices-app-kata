@@ -12,10 +12,9 @@ On the other hand, downside include data duplication, and maybe the greatest dow
 
 ![showcase-terminal](./showcase-terminal.png)
 
+### Development
+> Depedencies: NodeJS, tmux
+
 ```
-cd client && yarn start
-cd comments && npm start
-cd posts && npm start
-cd event-bus && npm start
-cd query && npm start
+make
 ```
