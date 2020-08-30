@@ -9,6 +9,6 @@ module.exports = class {
 
   static dispatch(type, data) {
     axios.post(this.endpoint, { type, data });
-    console.log(`EventDispatched: ${type}: ${JSON.stringify(data)}`)
+    console.log(`🚀 ${type}`, data);
   }
 };

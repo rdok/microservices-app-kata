@@ -12,7 +12,7 @@ const db = {};
 const commentRepository = new CommentRepository(db);
 
 app.get('/posts/comments', (req, res) => {
-  res.send(db);
+  res.send({data: db});
 });
 
 app.get('/posts/:id/comments', (req, res) => {
@@ -30,16 +30,16 @@ app.post('/posts/:id/comments', ({ params, body }, res) => {
 app.post('/events', (req, res) => {
   const type = req.body.type;
   const data = req.body.data;
-  console.log(`EventRetrieved: ${type}: ${JSON.stringify(data)}`);
+  console.log(`⚡ ${type}`, data);
 
   if (type === 'PostCreated') {
     db[data.id] = [];
-    console.log('Initialized comments for new post.')
+    console.log('👷 Initialised comments for new post', data)
   }
 
   res.send({});
 });
 
 app.listen(4001, () => {
-  console.log('Listening on http://localhost:4001');
+  console.log('📡 Listening on http://localhost:4001');
 });

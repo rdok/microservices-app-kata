@@ -20,15 +20,16 @@ app.post('/posts', (req, res) => {
   const { title } = req.body;
   const post = { id, title };
   posts[id] = post;
+  console.log('👷 Stored new post ', post)
 
   EventBus.postCreated(post);
   res.status(201).send(post);
 });
 
 app.post('/events', (req, res) => {
-  console.log(`EventRetrieved: ${req.body.type}: ${JSON.stringify(req.body.data)}`)
+  console.log(`⚡ ${req.body.type}`, req.body.data)
   res.send({});
 })
 app.listen(4000, () => {
-  console.log('Listening on http://localhost:4000');
+  console.log('📡 Listening on http://localhost:4000');
 });

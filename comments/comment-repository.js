@@ -9,10 +9,12 @@ class CommentRepository {
     const id = randomBytes(16).toString('hex');
     const { content } = data;
 
-    const comment = { id, postId, content, status: 'pending-moderation' };
+    const comment = { id, postId, content, 'moderation-status': 'pending' };
     const comments = this.db[postId];
     comments.push(comment);
     this.db[postId] = comments;
+
+    console.log('👷 Stored new comment ', comment)
 
     return comment;
   }

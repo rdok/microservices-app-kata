@@ -11,12 +11,12 @@ app.post('/events', (req, res) => {
 
   for (const service in LISTENERS) {
     axios.post(LISTENERS[service], event);
-    console.log(`EventBrodcasted: ${event.type}: ${JSON.stringify(event.data)}`)
+    console.log(`💥 ${event.type} 🌠 ${service}:`, event.data)
   }
 
   res.send({ status: 'OK' });
 });
 
 app.listen(4005,() => {
-  console.log('Listening on http://localhost:4005')
+  console.log('📡 Listening on http://localhost:4005')
 });
